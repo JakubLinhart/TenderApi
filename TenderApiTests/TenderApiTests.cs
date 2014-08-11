@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime;
 using System.Text;
 using NUnit.Framework;
 using TenderApi;
@@ -306,5 +307,19 @@ namespace TenderApiTests
             Assert.AreEqual(companyName, company.Name);
         }
         #endregion
+
+        #region SSO Tests
+
+        [Test]
+        public void Can_Generate_SSO_Token_With_Session_Expiration()
+        {
+            TimeSpan expiration = TimeSpan.FromHours(1);
+
+            string token = TenderApi.TenderApi.GenerateSsoToken(TenderSettings.Email, TenderSettings.Site, TenderSettings.SsoKey, expiration, expiration);
+
+            Assert.IsNotNull(token);
+        }
+        #endregion
+
     }
 }

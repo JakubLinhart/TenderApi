@@ -75,10 +75,20 @@ namespace TenderApi
             return Execute<List<T>>(request);
         }
 
-        public static string GenerateSsoToken(string email, string site, string apiKey)
+        public static string GenerateSsoToken(string email, string site, string apiKey, TimeSpan expires, TimeSpan sessionExpires)
         {
-            var userDetails = JsonConvert.SerializeObject(new { email, expires = DateTime.Now.AddDays(1).ToString("ddd MMM d HH:mm:ss UTC yyyy") }, Formatting.None);
+            var userDetails = JsonConvert.SerializeObject(new
+            {
+                email,
+                expires = DateTime.Now.Add(expires).ToString("ddd MMM d HH:mm:ss UTC yyyy"),
+                session_expires = DateTime.Now.Add(sessionExpires).ToString("ddd MMM d HH:mm:ss UTC yyyy"),
+            }, Formatting.None);
 
+            return GenerateSsoTokenImpl(userDetails, site, apiKey);
+        }
+
+        private static string GenerateSsoTokenImpl(string userDetails, string site, string apiKey)
+        {
             string initVector = "OpenSSL for Ruby"; // DO NOT CHANGE
 
             byte[] initVectorBytes = Encoding.UTF8.GetBytes(initVector);
@@ -102,6 +112,13 @@ namespace TenderApi
             string encoded = Convert.ToBase64String(encrypted);
 
             return HttpUtility.UrlEncode(encoded);
+        }
+
+        public static string GenerateSsoToken(string email, string site, string apiKey)
+        {
+            var userDetails = JsonConvert.SerializeObject(new { email, expires = DateTime.Now.AddDays(1).ToString("ddd MMM d HH:mm:ss UTC yyyy") }, Formatting.None);
+
+            return GenerateSsoTokenImpl(userDetails, site, apiKey);
         }
 
         static byte[] EncryptStringToBytesAes(byte[] textBytes, byte[] Key, byte[] IV)
