@@ -23,9 +23,9 @@ namespace TenderApi.Model
         public string state { get; set; }
         public int? watchers_count { get; set; }
         public Boolean hidden { get; set; }
-        public Int32 user_id { get; set; }
-        public Int32 last_user_id { get; set; }
-        public Int32 last_comment_id { get; set; }
+        public Int32? user_id { get; set; }
+        public Int32? last_user_id { get; set; }
+        public Int32? last_comment_id { get; set; }
         public string last_via { get; set; }
         public string last_author_email { get; set; }
         public string last_author_name { get; set; }
