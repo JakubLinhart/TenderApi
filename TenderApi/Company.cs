@@ -27,7 +27,16 @@ namespace TenderApi
 
             request.AddParameter("name", name);
 
-            return Execute<List<Company>>(request).FirstOrDefault();
+            var response = _client.Execute<List<Company>>(request);
+
+            if (response.Data != null)
+            {
+                return response.Data.FirstOrDefault();    
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }
